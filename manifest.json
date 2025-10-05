@@ -1,0 +1,44 @@
+{
+  "manifest_version": 2,
+  "name": "Same Address Filter",
+  "version": "1.0.0",
+  "description": "Quickly filter emails from the same sender with a single click",
+  "author": "Martin",
+  "applications": {
+    "gecko": {
+      "id": "same-address-filter@local",
+      "strict_min_version": "91.0"
+    }
+  },
+  "permissions": [
+    "messagesRead",
+    "accountsRead",
+    "tabs",
+    "menus",
+    "storage",
+    "messagesMove",
+    "folders"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "message_display_scripts": [
+    {
+      "js": [
+        "content-script.js"
+      ],
+      "css": [
+        "styles.css"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
+    "64": "icon-64.png"
+  }
+}

@@ -1,0 +1,45 @@
+#!/bin/bash
+# Build script for Same Address Filter Thunderbird Extension
+
+echo "Building Same Address Filter extension..."
+
+# Check if icons exist, generate if not
+if [ ! -f "icon-16.png" ] || [ ! -f "icon-32.png" ] || [ ! -f "icon-48.png" ] || [ ! -f "icon-64.png" ]; then
+    echo "Generating icons..."
+    if command -v python3 &> /dev/null; then
+        pip3 install Pillow --quiet 2>/dev/null || pip3 install Pillow
+        python3 generate_icons.py
+    else
+        echo "Warning: Python3 not found. Please generate icons manually."
+    fi
+fi
+
+# Remove old build if exists
+if [ -f "same-address-filter.xpi" ]; then
+    echo "Removing old build..."
+    rm same-address-filter.xpi
+fi
+
+# Create the XPI package
+echo "Creating XPI package..."
+zip -r same-address-filter.xpi \
+    manifest.json \
+    background.js \
+    content-script.js \
+    styles.css \
+    icon-*.png \
+    -x "*.py" "*.md" "*.sh" ".git/*" "*.xpi" \
+    > /dev/null 2>&1
+
+if [ -f "same-address-filter.xpi" ]; then
+    echo "✓ Build successful: same-address-filter.xpi"
+    echo ""
+    echo "To install in Thunderbird:"
+    echo "1. Open Thunderbird"
+    echo "2. Go to Menu (≡) → Add-ons and Themes"
+    echo "3. Click the gear icon (⚙) → Install Add-on From File..."
+    echo "4. Select same-address-filter.xpi"
+else
+    echo "✗ Build failed"
+    exit 1
+fi
