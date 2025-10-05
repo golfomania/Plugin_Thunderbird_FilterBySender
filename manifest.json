@@ -27,8 +27,8 @@
   "commands": {
     "filter-by-sender": {
       "suggested_key": {
-        "default": "Ctrl+Shift+F",
-        "mac": "MacCtrl+Shift+F"
+        "default": "Ctrl+Shift+Q",
+        "mac": "MacCtrl+Shift+Q"
       },
       "description": "Filter all emails from the current message's sender"
     }
