@@ -1,21 +1,17 @@
 // Background script for Same Address Filter extension
 
 // Create context menu when extension loads
-browser.runtime.onInstalled.addListener(() => {
-  browser.menus.create({
-    id: "filter-by-sender",
-    title: "Filter all emails from this sender",
-    contexts: ["message_list"],
-    onclick: handleContextMenuClick,
-  });
+browser.menus.create({
+  id: "filter-by-sender",
+  title: "Filter all emails from this sender",
+  contexts: ["message_list"],
 });
 
-// Also create a context menu for the message display
-browser.menus.create({
-  id: "filter-by-sender-display",
-  title: "Filter all emails from this sender",
-  contexts: ["all"],
-  documentUrlPatterns: ["about:message*"],
+// Add menu click listener
+browser.menus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "filter-by-sender") {
+    await handleContextMenuClick(info, tab);
+  }
 });
 
 // Handle context menu clicks
@@ -36,52 +32,8 @@ async function handleContextMenuClick(info, tab) {
   }
 }
 
-// Handle messages from content script
-browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  if (message.action === "filterBySender") {
-    try {
-      // Get current tab info
-      const tabs = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      const currentTab = tabs[0];
-
-      // Get the displayed message
-      const messageHeader = await browser.messageDisplay.getDisplayedMessage(
-        currentTab.id
-      );
-
-      if (messageHeader) {
-        await filterBySender(messageHeader.author);
-        return { success: true };
-      }
-    } catch (error) {
-      console.error("Error filtering by sender:", error);
-      return { success: false, error: error.message };
-    }
-  }
-
-  if (message.action === "getMessageAuthor") {
-    try {
-      const tabs = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
-      const currentTab = tabs[0];
-      const messageHeader = await browser.messageDisplay.getDisplayedMessage(
-        currentTab.id
-      );
-
-      if (messageHeader && messageHeader.author) {
-        return { author: messageHeader.author };
-      }
-    } catch (error) {
-      console.error("Error getting message author:", error);
-      return { error: error.message };
-    }
-  }
-});
+// Add command/keyboard shortcut support (optional)
+// You can define keyboard shortcuts in the manifest if needed
 
 // Function to filter messages by sender
 async function filterBySender(author) {
@@ -127,20 +79,3 @@ async function filterBySender(author) {
     );
   }
 }
-
-// Listen for tab changes to update context menu
-browser.tabs.onActivated.addListener(async (activeInfo) => {
-  try {
-    const tab = await browser.tabs.get(activeInfo.tabId);
-    const messageHeader = await browser.messageDisplay.getDisplayedMessage(
-      activeInfo.tabId
-    );
-
-    // Update context menu visibility based on whether a message is displayed
-    browser.menus.update("filter-by-sender-display", {
-      visible: messageHeader !== null,
-    });
-  } catch (error) {
-    // Tab might not be a mail tab
-  }
-});

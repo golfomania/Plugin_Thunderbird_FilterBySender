@@ -2,13 +2,13 @@
 
 ## Overview
 
-This Thunderbird extension adds a convenient button and context menu option to quickly filter all emails from the same sender.
+This Thunderbird extension adds a convenient context menu option to quickly filter all emails from the same sender.
 
 ## Features
 
-- **Filter Button**: Appears near the sender's email address when viewing a message
-- **Context Menu**: Right-click option in the message list
+- **Context Menu**: Right-click on any email in the message list to filter by sender
 - **Quick Filter**: Automatically populates the filter/search with the sender's email address
+- **Simple & Fast**: No complex UI, just right-click and filter
 
 ## Prerequisites
 
@@ -89,24 +89,14 @@ After installation, you may need to:
 
 ## Usage
 
-### Method 1: Filter Button
+### How to Use
 
-1. Open any email in your inbox
-2. Look for the **"Filter Sender"** button near the sender's email address
-3. Click the button to automatically filter all emails from that sender
+1. **Right-click** on any email in your message list
+2. Select **"Filter all emails from this sender"** from the context menu
+3. The quick filter will be automatically populated with the sender's email address
+4. All emails from that sender will be displayed
 
-### Method 2: Context Menu
-
-1. Right-click on any email in your message list
-2. Select **"Filter all emails from this sender"**
-3. The filter will be applied automatically
-
-### Method 3: Toolbar Button (Fallback)
-
-If the inline button doesn't appear:
-
-1. Look for the filter icon in the message toolbar
-2. Click it while viewing an email to filter by that sender
+The extension uses Thunderbird's built-in Quick Filter bar to show results. You'll see the filter applied in the filter area, showing only emails from the selected sender.
 
 ## Troubleshooting
 
@@ -124,19 +114,14 @@ If the inline button doesn't appear:
 3. Verify permissions:
    - Ensure the extension has necessary permissions in Add-ons Manager
 
-### Button Not Appearing?
+### Context Menu Not Appearing?
 
-The extension tries multiple methods to inject the button:
+If the context menu option doesn't appear:
 
-1. Near the email address in the message header
-2. In the message toolbar as a fallback
-3. Via right-click context menu
-
-If none work, try:
-
-- Restarting Thunderbird
-- Checking for conflicts with other extensions
-- Updating Thunderbird to the latest version
+- Make sure you're right-clicking on an email in the message list (not in the reading pane)
+- Restart Thunderbird after installation
+- Check for conflicts with other extensions that modify context menus
+- Verify the extension is enabled in Add-ons and Themes
 
 ### Filter Not Working?
 
@@ -165,13 +150,13 @@ Simply restart Thunderbird
 Plugin_Thunderbird_SameAdress/
 ├── manifest.json          # Extension manifest
 ├── background.js          # Background script for message handling
-├── content-script.js      # Content script for UI injection
-├── styles.css            # Button and UI styles
 ├── icon-16.png           # Icons (various sizes)
 ├── icon-32.png
 ├── icon-48.png
 ├── icon-64.png
 ├── generate_icons.py     # Icon generation script
+├── build.sh              # Build script for creating XPI
+├── .gitignore            # Git ignore file
 └── INSTALL.md           # This file
 ```
 
@@ -183,11 +168,10 @@ Plugin_Thunderbird_SameAdress/
 - `menus`: Create context menus
 - `storage`: Store temporary data
 - `accountsFolders`: Access folder information
-- `mailTabs`: Manage mail tabs and quick filters
 
 ## Version History
 
-- v1.0.0: Initial release with button and context menu support
+- v1.0.0: Initial release with context menu support for filtering by sender
 
 ## Support
 

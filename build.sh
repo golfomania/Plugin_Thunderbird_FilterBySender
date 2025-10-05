@@ -25,10 +25,8 @@ echo "Creating XPI package..."
 zip -r same-address-filter.xpi \
     manifest.json \
     background.js \
-    content-script.js \
-    styles.css \
     icon-*.png \
-    -x "*.py" "*.md" "*.sh" ".git/*" "*.xpi" \
+    -x "*.py" "*.md" "*.sh" ".git/*" "*.xpi" ".gitignore" \
     > /dev/null 2>&1
 
 if [ -f "same-address-filter.xpi" ]; then
