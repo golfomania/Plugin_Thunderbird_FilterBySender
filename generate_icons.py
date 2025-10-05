@@ -48,8 +48,8 @@ def create_icon(size, filename):
     img.save(filename, 'PNG')
     print(f"Created {filename}")
 
-# Create icons in different sizes
-sizes = [16, 32, 48, 64]
+# Create icons in different sizes (including 128 for AMO)
+sizes = [16, 32, 48, 64, 128]
 for size in sizes:
     create_icon(size, f'icon-{size}.png')
 

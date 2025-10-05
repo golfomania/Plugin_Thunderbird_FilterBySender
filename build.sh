@@ -4,7 +4,7 @@
 echo "Building Same Address Filter extension..."
 
 # Check if icons exist, generate if not
-if [ ! -f "icon-16.png" ] || [ ! -f "icon-32.png" ] || [ ! -f "icon-48.png" ] || [ ! -f "icon-64.png" ]; then
+if [ ! -f "icon-16.png" ] || [ ! -f "icon-32.png" ] || [ ! -f "icon-48.png" ] || [ ! -f "icon-64.png" ] || [ ! -f "icon-128.png" ]; then
     echo "Generating icons..."
     if command -v python3 &> /dev/null; then
         pip3 install Pillow --quiet 2>/dev/null || pip3 install Pillow

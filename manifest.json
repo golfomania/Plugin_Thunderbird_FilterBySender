@@ -1,22 +1,21 @@
 {
   "manifest_version": 2,
-  "name": "Same Address Filter",
+  "name": "Filter by sender",
   "version": "1.1.0",
-  "description": "Quickly filter emails from the same sender with a keyboard shortcut or right-click",
-  "author": "Martin",
-  "applications": {
+  "description": "Quickly find emails from the same sender with a keyboard shortcut or right-click",
+  "author": "Martin Loeffler",
+  "homepage_url": "https://github.com/martin/Plugin_Thunderbird_SameAdress",
+  "browser_specific_settings": {
     "gecko": {
-      "id": "same-address-filter@local",
-      "strict_min_version": "91.0"
+      "id": "filter-by-sender@martinloeffler",
+      "strict_min_version": "115.0",
+      "strict_max_version": "*"
     }
   },
   "permissions": [
     "messagesRead",
-    "accountsRead",
     "tabs",
-    "menus",
-    "storage",
-    "accountsFolders"
+    "menus"
   ],
   "background": {
     "scripts": [
@@ -30,13 +29,14 @@
         "default": "Ctrl+Shift+Q",
         "mac": "MacCtrl+Shift+Q"
       },
-      "description": "Filter all emails from the current message's sender"
+      "description": "Find all emails from the current message's sender"
     }
   },
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",
     "48": "icon-48.png",
-    "64": "icon-64.png"
+    "64": "icon-64.png",
+    "128": "icon-128.png"
   }
 }
