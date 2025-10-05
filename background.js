@@ -32,8 +32,48 @@ async function handleContextMenuClick(info, tab) {
   }
 }
 
-// Add command/keyboard shortcut support (optional)
-// You can define keyboard shortcuts in the manifest if needed
+// Handle keyboard shortcut command
+browser.commands.onCommand.addListener(async (command) => {
+  if (command === "filter-by-sender") {
+    console.log("Keyboard shortcut triggered for filter-by-sender");
+
+    try {
+      // Get the currently displayed message
+      const tabs = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+
+      if (tabs && tabs.length > 0) {
+        const currentTab = tabs[0];
+
+        // Check if we're viewing a message
+        const messageHeader = await browser.messageDisplay.getDisplayedMessage(
+          currentTab.id
+        );
+
+        if (messageHeader && messageHeader.author) {
+          await filterBySender(messageHeader.author);
+        } else {
+          // If no message is displayed, try to get selected messages from the list
+          const messageList = await browser.mailTabs.getSelectedMessages();
+          if (
+            messageList &&
+            messageList.messages &&
+            messageList.messages.length > 0
+          ) {
+            const message = messageList.messages[0];
+            await filterBySender(message.author);
+          } else {
+            console.log("No message selected to filter by sender");
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error handling keyboard shortcut:", error);
+    }
+  }
+});
 
 // Function to filter messages by sender
 async function filterBySender(author) {

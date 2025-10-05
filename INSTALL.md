@@ -2,13 +2,14 @@
 
 ## Overview
 
-This Thunderbird extension adds a convenient context menu option to quickly filter all emails from the same sender.
+This Thunderbird extension adds a convenient keyboard shortcut and context menu option to quickly filter all emails from the same sender.
 
 ## Features
 
 - **Context Menu**: Right-click on any email in the message list to filter by sender
+- **Keyboard Shortcut**: Press `Ctrl+Shift+F` (or `Cmd+Shift+F` on Mac) to filter by sender
 - **Quick Filter**: Automatically populates the filter/search with the sender's email address
-- **Simple & Fast**: No complex UI, just right-click and filter
+- **Simple & Fast**: Works with both mouse and keyboard
 
 ## Prerequisites
 
@@ -89,12 +90,17 @@ After installation, you may need to:
 
 ## Usage
 
-### How to Use
+### Method 1: Keyboard Shortcut (Fastest!)
+
+1. Select any email in your message list or open an email
+2. Press **`Ctrl+Shift+F`** (Linux/Windows) or **`Cmd+Shift+F`** (Mac)
+3. The quick filter will instantly populate with the sender's email address
+
+### Method 2: Right-Click Context Menu
 
 1. **Right-click** on any email in your message list
 2. Select **"Filter all emails from this sender"** from the context menu
 3. The quick filter will be automatically populated with the sender's email address
-4. All emails from that sender will be displayed
 
 The extension uses Thunderbird's built-in Quick Filter bar to show results. You'll see the filter applied in the filter area, showing only emails from the selected sender.
 
@@ -113,6 +119,15 @@ The extension uses Thunderbird's built-in Quick Filter bar to show results. You'
 
 3. Verify permissions:
    - Ensure the extension has necessary permissions in Add-ons Manager
+
+### Keyboard Shortcut Not Working?
+
+If `Ctrl+Shift+F` doesn't work:
+
+- The shortcut might conflict with another extension or system shortcut
+- You can customize it: Go to **Add-ons and Themes** → **⚙ Gear Menu** → **Manage Extension Shortcuts**
+- Find "Same Address Filter" and set your preferred shortcut
+- Make sure an email is selected or displayed when using the shortcut
 
 ### Context Menu Not Appearing?
 
@@ -171,6 +186,7 @@ Plugin_Thunderbird_SameAdress/
 
 ## Version History
 
+- v1.1.0: Added keyboard shortcut support (Ctrl+Shift+F)
 - v1.0.0: Initial release with context menu support for filtering by sender
 
 ## Support
