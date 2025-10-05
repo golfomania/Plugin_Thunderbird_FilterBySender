@@ -182,7 +182,8 @@ Plugin_Thunderbird_SameAdress/
 - `tabs`: Manage tabs
 - `menus`: Create context menus
 - `storage`: Store temporary data
-- `folders`: Access folder information
+- `accountsFolders`: Access folder information
+- `mailTabs`: Manage mail tabs and quick filters
 
 ## Version History
 

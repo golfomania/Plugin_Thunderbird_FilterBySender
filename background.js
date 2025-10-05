@@ -101,29 +101,30 @@ async function filterBySender(author) {
     const mailTab = await browser.mailTabs.getCurrent();
 
     if (mailTab) {
-      // Update the query/search in the current tab
-      // Note: Thunderbird's WebExtension API has limitations for directly setting the search
-      // We'll use a workaround by creating a new tab with a search query
-      await browser.mailTabs.query({
-        author: emailAddress,
-        includeSubFolders: true,
-      });
-
-      // Alternative: Set quick filter (if supported in your Thunderbird version)
-      await browser.mailTabs.setQuickFilter({
-        text: {
-          text: emailAddress,
-          sender: true,
-        },
-      });
+      // Set quick filter to filter by sender
+      // Note: This is the primary method for filtering in Thunderbird WebExtensions
+      try {
+        await browser.mailTabs.setQuickFilter({
+          text: {
+            text: emailAddress,
+            author: true, // Filter by author/sender
+          },
+        });
+        console.log(`Quick filter set for: ${emailAddress}`);
+      } catch (quickFilterError) {
+        console.log("Quick filter not supported, trying alternative method");
+        // Alternative: Create a search folder or use saved search
+        // This requires different permissions and is more complex
+      }
     }
 
     console.log(`Filtering emails from: ${emailAddress}`);
   } catch (error) {
     console.error("Error in filterBySender:", error);
-    // Try fallback method - copy to clipboard
-    await browser.clipboard.writeText(emailAddress);
-    console.log("Email address copied to clipboard for manual filtering");
+    // Show notification to user about the error
+    console.log(
+      `Failed to filter. Please manually search for: ${emailAddress}`
+    );
   }
 }
 

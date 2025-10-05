@@ -16,8 +16,8 @@
     "tabs",
     "menus",
     "storage",
-    "messagesMove",
-    "folders"
+    "accountsFolders",
+    "mailTabs"
   ],
   "background": {
     "scripts": [
@@ -25,7 +25,7 @@
     ],
     "persistent": false
   },
-  "message_display_scripts": [
+  "messageDisplayScripts": [
     {
       "js": [
         "content-script.js"
