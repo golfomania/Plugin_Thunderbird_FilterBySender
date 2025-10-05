@@ -114,6 +114,10 @@ Create screenshots showing:
 ### 5. Version Notes
 
 ```
+Version 1.1.1:
+- Fixed AMO validation error (strict_max_version format)
+- Compatible with Thunderbird 115.x ESR series
+
 Version 1.1.0:
 - Added keyboard shortcut support (Ctrl+Shift+Q)
 - Improved error handling

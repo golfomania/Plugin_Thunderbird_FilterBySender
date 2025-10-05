@@ -192,7 +192,8 @@ This extension:
 
 ## Version History
 
-- **v1.1.0** (Current): Added keyboard shortcut support (Ctrl+Shift+Q)
+- **v1.1.1** (Current): Fixed AMO validation error (strict_max_version format)
+- **v1.1.0**: Added keyboard shortcut support (Ctrl+Shift+Q)
 - **v1.0.0**: Initial release with context menu filtering
 
 ## License
