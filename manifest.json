@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "description": "Quickly find emails from the same sender with a keyboard shortcut or right-click",
   "author": "Martin Loeffler",
-  "homepage_url": "https://github.com/martin/Plugin_Thunderbird_SameAdress",
+  "homepage_url": "https://github.com/golfomania/Plugin_Thunderbird_FilterBySender",
   "browser_specific_settings": {
     "gecko": {
       "id": "filter-by-sender@martinloeffler",

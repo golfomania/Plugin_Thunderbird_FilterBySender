@@ -46,7 +46,7 @@ _Coming soon - pending review_
 
 #### Quick Install (Pre-built)
 
-1. Download the latest `.xpi` file from the [Releases](https://github.com/martin/Plugin_Thunderbird_SameAdress/releases) page
+1. Download the latest `.xpi` file from the [Releases](https://github.com/golfomania/Plugin_Thunderbird_FilterBySender/releases) page
 2. In Thunderbird: **Menu (≡)** → **Add-ons and Themes**
 3. Click the gear icon (⚙) → **Install Add-on From File...**
 4. Select the downloaded `.xpi` file
@@ -56,8 +56,8 @@ _Coming soon - pending review_
 
 ```bash
 # Clone the repository
-git clone https://github.com/martin/Plugin_Thunderbird_SameAdress.git
-cd Plugin_Thunderbird_SameAdress
+git clone https://github.com/golfomania/Plugin_Thunderbird_FilterBySender.git
+cd Plugin_Thunderbird_FilterBySender
 
 # Generate icons (requires Python 3 with Pillow)
 pip3 install Pillow
@@ -95,7 +95,7 @@ chmod +x build.sh
 ### Project Structure
 
 ```
-Plugin_Thunderbird_SameAdress/
+Plugin_Thunderbird_FilterBySender/
 ├── manifest.json          # Extension manifest (Manifest V2)
 ├── background.js          # Background script for filtering logic
 ├── generate_icons.py      # Icon generation script
@@ -203,7 +203,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For issues, feature requests, or questions:
 
-- Open an issue on [GitHub](https://github.com/martin/Plugin_Thunderbird_SameAdress/issues)
+- Open an issue on [GitHub](https://github.com/golfomania/Plugin_Thunderbird_FilterBySender/issues)
 - Check existing issues for solutions
 
 ## Author
@@ -216,4 +216,4 @@ Created by Martin Loeffler
 
 ## Repository Name
 
-The repository keeps the name "Plugin_Thunderbird_SameAdress" for historical reasons, while the extension is published as "Filter by sender".
+The repository is named "Plugin_Thunderbird_FilterBySender" to match the extension name "Filter by sender".

@@ -149,8 +149,8 @@ Version 1.0.0:
 ## Support Information for AMO
 
 **Support Email**: [Your email]
-**Support URL**: https://github.com/martin/Plugin_Thunderbird_SameAdress/issues
-**Homepage**: https://github.com/martin/Plugin_Thunderbird_SameAdress
+**Support URL**: https://github.com/golfomania/Plugin_Thunderbird_FilterBySender/issues
+**Homepage**: https://github.com/golfomania/Plugin_Thunderbird_FilterBySender
 
 ## Update Process
 
@@ -181,5 +181,5 @@ When updating the extension:
 ## Notes
 
 - The extension is named "Filter by sender" for better discoverability
-- The repository name remains "Plugin_Thunderbird_SameAdress" for historical reasons
+- The repository is named "Plugin_Thunderbird_FilterBySender" to match the extension purpose
 - AMO requires the extension to work with the latest Thunderbird ESR (currently 115.x)
