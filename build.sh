@@ -1,7 +1,7 @@
 #!/bin/bash
-# Build script for Same Address Filter Thunderbird Extension
+# Build script for Filter by sender Thunderbird Extension
 
-echo "Building Same Address Filter extension..."
+echo "Building Filter by sender extension..."
 
 # Check if icons exist, generate if not
 if [ ! -f "icon-16.png" ] || [ ! -f "icon-32.png" ] || [ ! -f "icon-48.png" ] || [ ! -f "icon-64.png" ] || [ ! -f "icon-128.png" ]; then
@@ -15,28 +15,28 @@ if [ ! -f "icon-16.png" ] || [ ! -f "icon-32.png" ] || [ ! -f "icon-48.png" ] ||
 fi
 
 # Remove old build if exists
-if [ -f "same-address-filter.xpi" ]; then
+if [ -f "filter-by-sender.xpi" ]; then
     echo "Removing old build..."
-    rm same-address-filter.xpi
+    rm filter-by-sender.xpi
 fi
 
 # Create the XPI package
 echo "Creating XPI package..."
-zip -r same-address-filter.xpi \
+zip -r filter-by-sender.xpi \
     manifest.json \
     background.js \
     icon-*.png \
     -x "*.py" "*.md" "*.sh" ".git/*" "*.xpi" ".gitignore" \
     > /dev/null 2>&1
 
-if [ -f "same-address-filter.xpi" ]; then
-    echo "✓ Build successful: same-address-filter.xpi"
+if [ -f "filter-by-sender.xpi" ]; then
+    echo "✓ Build successful: filter-by-sender.xpi"
     echo ""
     echo "To install in Thunderbird:"
     echo "1. Open Thunderbird"
     echo "2. Go to Menu (≡) → Add-ons and Themes"
     echo "3. Click the gear icon (⚙) → Install Add-on From File..."
-    echo "4. Select same-address-filter.xpi"
+    echo "4. Select filter-by-sender.xpi"
 else
     echo "✗ Build failed"
     exit 1

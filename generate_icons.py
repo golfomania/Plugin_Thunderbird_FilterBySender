@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate simple placeholder icons for the extension"""
+"""Generate simple placeholder icons for Filter by sender extension"""
 
 from PIL import Image, ImageDraw, ImageFont
 import os

@@ -1,9 +1,9 @@
-// Background script for Same Address Filter extension
+// Background script for Filter by sender extension
 
 // Create context menu when extension loads
 browser.menus.create({
   id: "filter-by-sender",
-  title: "Filter all emails from this sender",
+  title: "Find all emails from this sender",
   contexts: ["message_list"],
 });
 

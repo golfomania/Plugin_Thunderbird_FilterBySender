@@ -1,4 +1,4 @@
-# Same Address Filter for Thunderbird
+# Filter by sender for Thunderbird
 
 You need this plugin if you want to answer this questions with a single click:
 
@@ -12,7 +12,7 @@ A simple yet powerful Thunderbird extension that lets you instantly filter all e
 Ever needed to quickly see all emails from a specific sender? Instead of manually copying email addresses and pasting them into search filters, this extension does it all with one action:
 
 - Press `Ctrl+Shift+Q` (customizable)
-- Or right-click and select "Filter all emails from this sender"
+- Or right-click and select "Find all emails from this sender"
 
 Perfect for:
 
@@ -67,7 +67,7 @@ python3 generate_icons.py
 chmod +x build.sh
 ./build.sh
 
-# Install the generated same-address-filter.xpi in Thunderbird
+# Install the generated filter-by-sender.xpi in Thunderbird
 ```
 
 ## Usage
@@ -81,13 +81,13 @@ chmod +x build.sh
 ### Method 2: Right-Click Context Menu
 
 1. Right-click on any email in your message list
-2. Select **"Filter all emails from this sender"**
+2. Select **"Find all emails from this sender"**
 3. All emails from that sender are displayed
 
 ### Customizing the Keyboard Shortcut
 
 1. Go to **Add-ons and Themes** → **⚙ Gear Menu** → **Manage Extension Shortcuts**
-2. Find "Same Address Filter"
+2. Find "Filter by sender"
 3. Click on the shortcut and set your preferred key combination
 
 ## Development
@@ -123,7 +123,7 @@ Plugin_Thunderbird_SameAdress/
 ./build.sh
 
 # Or manually create the XPI
-zip -r same-address-filter.xpi manifest.json background.js icon-*.png
+zip -r filter-by-sender.xpi manifest.json background.js icon-*.png
 ```
 
 ### Permissions
@@ -147,7 +147,7 @@ No data is collected, stored, or transmitted outside of Thunderbird.
 2. **Check Browser Console for errors**:
 
    - Menu → Developer Tools → Error Console
-   - Look for messages from "Same Address Filter"
+   - Look for messages from "Filter by sender"
 
 3. **Verify the extension is enabled**:
    - Add-ons and Themes → Ensure toggle is ON
@@ -214,6 +214,6 @@ Created by Martin Loeffler
 
 **Note**: This extension is pending review for listing on addons.mozilla.org (AMO). Until then, please use the manual installation method.
 
-## Why "SameAdress"?
+## Repository Name
 
-The repository name keeps the original spelling as a unique identifier. The extension itself uses correct spelling throughout.
+The repository keeps the name "Plugin_Thunderbird_SameAdress" for historical reasons, while the extension is published as "Filter by sender".

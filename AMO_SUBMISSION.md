@@ -40,7 +40,7 @@ python3 generate_icons.py
 ./build.sh
 
 # 4. Verify the package
-unzip -l same-address-filter.xpi
+unzip -l filter-by-sender.xpi
 ```
 
 ## AMO Submission Process
@@ -55,8 +55,8 @@ unzip -l same-address-filter.xpi
 
 #### Basic Information
 
-- **Name**: Same Address Filter
-- **Summary**: Quickly filter emails from the same sender with a keyboard shortcut or right-click
+- **Name**: Filter by sender
+- **Summary**: Quickly find emails from the same sender with a keyboard shortcut or right-click
 - **Categories**:
   - Privacy & Security
   - Productivity
@@ -70,7 +70,7 @@ Filter all emails from the same sender instantly with a single keyboard shortcut
 
 **Key Features:**
 • Press Ctrl+Shift+Q to instantly filter by sender (customizable)
-• Right-click any email and select "Filter all emails from this sender"
+• Right-click any email and select "Find all emails from this sender"
 • Integrates seamlessly with Thunderbird's Quick Filter
 • Works with selected emails or when viewing messages
 • Zero configuration needed - works out of the box
@@ -100,7 +100,7 @@ Customizable via Add-ons → Manage Extension Shortcuts
 
 ### 3. Upload Files
 
-1. Upload `same-address-filter.xpi`
+1. Upload `filter-by-sender.xpi`
 2. Source code: Link to GitHub repository
 
 ### 4. Screenshots (Recommended)
@@ -180,6 +180,6 @@ When updating the extension:
 
 ## Notes
 
-- The extension name in AMO can be different from the repository name
-- Consider "Same Address Filter" or "Quick Sender Filter" for better discoverability
+- The extension is named "Filter by sender" for better discoverability
+- The repository name remains "Plugin_Thunderbird_SameAdress" for historical reasons
 - AMO requires the extension to work with the latest Thunderbird ESR (currently 115.x)
