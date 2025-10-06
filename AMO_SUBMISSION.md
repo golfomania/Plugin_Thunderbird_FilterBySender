@@ -94,7 +94,7 @@ Customizable via Add-ons → Manage Extension Shortcuts
 
 #### Technical Details
 
-- **Thunderbird Compatibility**: 115.0 - \*
+- **Thunderbird Compatibility**: 115.0 - 140.\*
 - **Extension Type**: WebExtension (Manifest V2)
 - **Permissions Required**: messagesRead, tabs, menus
 
@@ -114,6 +114,14 @@ Create screenshots showing:
 ### 5. Version Notes
 
 ```
+Version 1.1.3:
+- Extended compatibility to Thunderbird 140.x ESR
+- Support for latest Thunderbird versions including Flatpak
+
+Version 1.1.2:
+- Extended compatibility to Thunderbird 128.x
+- Fixed installation issue for newer Thunderbird versions
+
 Version 1.1.1:
 - Fixed AMO validation error (strict_max_version format)
 - Compatible with Thunderbird 115.x ESR series

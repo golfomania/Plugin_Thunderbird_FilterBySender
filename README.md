@@ -33,7 +33,7 @@ Perfect for:
 
 ## Requirements
 
-- Mozilla Thunderbird 115.0 or higher (ESR version)
+- Mozilla Thunderbird 115.0 to 140.x (ESR and regular versions)
 - Works on Windows, macOS, and Linux
 
 ## Installation
@@ -140,7 +140,7 @@ No data is collected, stored, or transmitted outside of Thunderbird.
 
 ### Extension Not Working?
 
-1. **Check Thunderbird version**: Must be 115.0 or higher
+1. **Check Thunderbird version**: Must be 115.0 to 140.x
 
    - Help → About Thunderbird
 
@@ -192,7 +192,9 @@ This extension:
 
 ## Version History
 
-- **v1.1.1** (Current): Fixed AMO validation error (strict_max_version format)
+- **v1.1.3** (Current): Extended compatibility to Thunderbird 140.x ESR
+- **v1.1.2**: Extended compatibility to Thunderbird 128.x
+- **v1.1.1**: Fixed AMO validation error (strict_max_version format)
 - **v1.1.0**: Added keyboard shortcut support (Ctrl+Shift+Q)
 - **v1.0.0**: Initial release with context menu filtering
 
