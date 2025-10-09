@@ -94,9 +94,9 @@ Customizable via Add-ons → Manage Extension Shortcuts
 
 #### Technical Details
 
-- **Thunderbird Compatibility**: 115.0 - 140.\*
+- **Thunderbird Compatibility**: 115.0 or higher
 - **Extension Type**: WebExtension (Manifest V2)
-- **Permissions Required**: messagesRead, tabs, menus
+- **Permissions Required**: messagesRead, menus
 
 ### 3. Upload Files
 
@@ -114,6 +114,11 @@ Create screenshots showing:
 ### 5. Version Notes
 
 ```
+Version 1.1.4:
+- Removed unused "tabs" permission
+- Removed strict_max_version (WebExtensions are forward-compatible)
+- Improved AMO compliance per reviewer feedback
+
 Version 1.1.3:
 - Extended compatibility to Thunderbird 140.x ESR
 - Support for latest Thunderbird versions including Flatpak

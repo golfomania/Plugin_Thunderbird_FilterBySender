@@ -33,7 +33,7 @@ Perfect for:
 
 ## Requirements
 
-- Mozilla Thunderbird 115.0 to 140.x (ESR and regular versions)
+- Mozilla Thunderbird 115.0 or higher (ESR and regular versions)
 - Works on Windows, macOS, and Linux
 
 ## Installation
@@ -131,7 +131,6 @@ zip -r filter-by-sender.xpi manifest.json background.js icon-*.png
 This extension uses minimal permissions following the principle of least privilege:
 
 - `messagesRead`: Read message metadata to get sender information
-- `tabs`: Access the current tab to identify selected messages
 - `menus`: Create the right-click context menu option
 
 No data is collected, stored, or transmitted outside of Thunderbird.
@@ -140,7 +139,7 @@ No data is collected, stored, or transmitted outside of Thunderbird.
 
 ### Extension Not Working?
 
-1. **Check Thunderbird version**: Must be 115.0 to 140.x
+1. **Check Thunderbird version**: Must be 115.0 or higher
 
    - Help → About Thunderbird
 
@@ -192,7 +191,8 @@ This extension:
 
 ## Version History
 
-- **v1.1.3** (Current): Extended compatibility to Thunderbird 140.x ESR
+- **v1.1.4** (Current): Removed unused permissions, improved AMO compliance
+- **v1.1.3**: Extended compatibility to Thunderbird 140.x ESR
 - **v1.1.2**: Extended compatibility to Thunderbird 128.x
 - **v1.1.1**: Fixed AMO validation error (strict_max_version format)
 - **v1.1.0**: Added keyboard shortcut support (Ctrl+Shift+Q)
