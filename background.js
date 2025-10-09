@@ -39,7 +39,13 @@ browser.commands.onCommand.addListener(async (command) => {
 
     try {
       // Get the currently displayed message
-      const currentTab = await browser.tabs.getCurrent();
+      const tabs = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+
+      if (tabs && tabs.length > 0) {
+        const currentTab = tabs[0];
 
         // Check if we're viewing a message
         const messageHeader = await browser.messageDisplay.getDisplayedMessage(
@@ -77,7 +83,11 @@ async function filterBySender(author) {
     const emailAddress = emailMatch[1] || author;
 
     // Get the current mail tab
-    const currentTab = await browser.tabs.getCurrent();
+    const tabs = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    const currentTab = tabs[0];
 
     // Check if it's a mail tab
     const mailTab = await browser.mailTabs.getCurrent();
