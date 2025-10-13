@@ -237,6 +237,9 @@ async function loadMoreSenders() {
 function renderTable() {
   const tbody = document.getElementById("table-body");
 
+  // Store current accordion state before re-rendering
+  const wasAccordionOpen = openAccordion;
+
   if (senderStats.length === 0) {
     tbody.innerHTML = `
             <tr>
@@ -338,6 +341,65 @@ function renderTable() {
       toggleAccordion(email);
     });
   });
+
+  // Restore accordion state if it was open before re-rendering
+  if (wasAccordionOpen) {
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+      restoreAccordionState(wasAccordionOpen);
+    }, 100);
+  }
+}
+
+// Restore accordion state after re-rendering
+async function restoreAccordionState(email) {
+  console.log("Restoring accordion state for:", email);
+
+  // Check if the sender still exists in the current data
+  const senderExists = senderStats.some((sender) => sender.email === email);
+  if (!senderExists) {
+    console.log("Sender no longer exists, clearing accordion state");
+    openAccordion = null;
+    return;
+  }
+
+  // Restore the accordion
+  openAccordion = email;
+  const accordionRow = document.querySelector(
+    `tr.accordion-row[data-email="${escapeHtml(email)}"]`
+  );
+  const accordionContent = accordionRow?.querySelector(".accordion-content");
+
+  if (accordionRow && accordionContent) {
+    accordionRow.style.display = "table-row";
+
+    // Load email previews
+    try {
+      accordionContent.innerHTML =
+        '<div class="loading">Loading email previews...</div>';
+
+      const response = await browser.runtime.sendMessage({
+        action: "getEmailPreviews",
+        email: email,
+        limit: 10,
+      });
+
+      console.log("Email previews response:", response);
+
+      if (response.success) {
+        console.log("Rendering previews:", response.previews);
+        renderEmailPreviews(accordionContent, response.previews);
+      } else {
+        console.error("Failed to get email previews:", response.error);
+        accordionContent.innerHTML =
+          '<div class="loading">Error loading previews</div>';
+      }
+    } catch (error) {
+      console.error("Error loading email previews:", error);
+      accordionContent.innerHTML =
+        '<div class="loading">Error loading previews</div>';
+    }
+  }
 }
 
 // Filter by sender (reuse existing functionality)
@@ -529,12 +591,14 @@ function closeAccordion(email) {
 
 // Render email previews
 function renderEmailPreviews(container, previews) {
+  console.log("renderEmailPreviews called with:", previews);
+
   if (previews.length === 0) {
     container.innerHTML = '<div class="loading">No emails found</div>';
     return;
   }
 
-  container.innerHTML = previews
+  const html = previews
     .map(
       (preview) => `
     <div class="email-preview">
@@ -545,6 +609,9 @@ function renderEmailPreviews(container, previews) {
   `
     )
     .join("");
+
+  console.log("Generated HTML:", html);
+  container.innerHTML = html;
 }
 
 // Handle messages from background script

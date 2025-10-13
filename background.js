@@ -484,10 +484,12 @@ async function deleteAllEmailsFromSender(emailAddress) {
 // Get email previews for a specific sender
 async function getEmailPreviews(emailAddress, limit = 10) {
   try {
+    console.log("getEmailPreviews called with:", emailAddress, "limit:", limit);
     const previews = [];
 
     // Get all accounts
     const accounts = await browser.accounts.list();
+    console.log("Found accounts:", accounts.length);
 
     for (const account of accounts) {
       // Get inbox folder for each account
@@ -523,6 +525,10 @@ async function getEmailPreviews(emailAddress, limit = 10) {
           const authorEmail = emailMatch[1] || message.author;
           return authorEmail === emailAddress;
         });
+
+        console.log(
+          `Found ${messagesFromSender.length} messages from ${emailAddress}`
+        );
 
         // Get previews for each message
         for (const message of messagesFromSender.slice(0, limit)) {
@@ -560,6 +566,7 @@ async function getEmailPreviews(emailAddress, limit = 10) {
     // Sort by date (newest first)
     previews.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    console.log(`Returning ${previews.length} previews for ${emailAddress}`);
     return previews.slice(0, limit);
   } catch (error) {
     console.error("Error getting email previews:", error);
