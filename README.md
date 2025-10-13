@@ -144,7 +144,8 @@ zip -r filter-by-sender.xpi manifest.json background.js sender-stats.html sender
 This extension uses minimal permissions following the principle of least privilege:
 
 - `messagesRead`: Read message metadata to get sender information
-- `accountsRead`: Access account information to list inbox folders
+- `accountsRead`: Access account information to list accounts
+- `accountsFolders`: Access folder information to list inbox folders
 - `tabs`: Access the current tab to identify selected messages
 - `menus`: Create the right-click context menu option
 - `messagesDelete`: Delete emails from the sender statistics table

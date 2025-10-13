@@ -191,7 +191,7 @@ async function getSenderStatistics(offset = 0, limit = 50) {
 
     for (const account of accounts) {
       // Get inbox folder for each account
-      const folders = await browser.folders.list(account.id);
+      const folders = await browser.accountsFolders.list(account.id);
       const inboxFolder = folders.find((folder) => folder.type === "inbox");
 
       if (inboxFolder) {
@@ -252,7 +252,7 @@ async function deleteAllEmailsFromSender(emailAddress) {
 
     for (const account of accounts) {
       // Get inbox folder for each account
-      const folders = await browser.folders.list(account.id);
+      const folders = await browser.accountsFolders.list(account.id);
       const inboxFolder = folders.find((folder) => folder.type === "inbox");
 
       if (inboxFolder) {
