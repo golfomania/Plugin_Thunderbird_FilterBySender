@@ -171,7 +171,8 @@ async function filterBySenderFromEmail(emailAddress) {
         allTabs.map((tab) => ({ id: tab.id, url: tab.url, title: tab.title }))
       );
 
-      const mainTab = allTabs.find(
+      // Try multiple approaches to find the Thunderbird tab
+      let mainTab = allTabs.find(
         (tab) =>
           tab.url &&
           !tab.url.includes("moz-extension") &&
@@ -180,6 +181,26 @@ async function filterBySenderFromEmail(emailAddress) {
           tab.url !== "undefined" &&
           tab.url !== ""
       );
+
+      // If not found, try to find by title or other properties
+      if (!mainTab) {
+        console.log("No tab found by URL, trying by title...");
+        mainTab = allTabs.find(
+          (tab) =>
+            tab.title &&
+            (tab.title.includes("Thunderbird") ||
+              tab.title.includes("Inbox") ||
+              tab.title.includes("Mail"))
+        );
+      }
+
+      // If still not found, use the first non-extension tab
+      if (!mainTab) {
+        console.log("No tab found by title, using first non-extension tab...");
+        mainTab = allTabs.find(
+          (tab) => tab.url && !tab.url.includes("moz-extension")
+        );
+      }
 
       if (mainTab) {
         console.log("Found main Thunderbird tab:", mainTab);
@@ -208,21 +229,33 @@ async function filterBySenderFromEmail(emailAddress) {
           }
         }
       } else {
-        console.log("No main Thunderbird tab found, trying to create one...");
-        try {
-          // Try to open Thunderbird's main window
-          const newTab = await browser.tabs.create({
-            url: "about:3pane",
-            active: true,
-          });
-          console.log("Created new Thunderbird tab:", newTab);
+        console.log("No main Thunderbird tab found - this should not happen");
+        console.log(
+          "Available tabs:",
+          allTabs.map((tab) => ({
+            id: tab.id,
+            url: tab.url,
+            title: tab.title,
+            active: tab.active,
+          }))
+        );
 
-          // Wait for the tab to load
-          await new Promise((resolve) => setTimeout(resolve, 500));
+        // As a last resort, try to use the first tab that's not the stats tab
+        const nonStatsTab = allTabs.find(
+          (tab) => tab.url && !tab.url.includes("sender-stats.html")
+        );
 
-          // Try to get the current mail tab
+        if (nonStatsTab) {
+          console.log("Using non-stats tab:", nonStatsTab);
+          await browser.tabs.update(nonStatsTab.id, { active: true });
+          console.log("Switched to non-stats tab");
+
+          // Wait a moment for the tab to become active
+          await new Promise((resolve) => setTimeout(resolve, 200));
+
+          // Try again to get the current mail tab
           const newMailTab = await browser.mailTabs.getCurrent();
-          console.log("Current mail tab after creating new tab:", newMailTab);
+          console.log("Current mail tab after switch:", newMailTab);
 
           if (newMailTab) {
             try {
@@ -236,13 +269,13 @@ async function filterBySenderFromEmail(emailAddress) {
               console.log(`Quick filter set for: ${emailAddress}`);
             } catch (quickFilterError) {
               console.error(
-                "Quick filter error after creating tab:",
+                "Quick filter error after switch:",
                 quickFilterError
               );
             }
           }
-        } catch (createError) {
-          console.error("Error creating Thunderbird tab:", createError);
+        } else {
+          console.log("No suitable tab found to switch to");
         }
       }
     }
