@@ -197,9 +197,9 @@ async function getSenderStatistics(offset = 0, limit = 50) {
 
       if (inboxFolder) {
         // Get all messages from inbox
-        const messages = await browser.messages.list(inboxFolder);
+        const messageList = await browser.messages.list(inboxFolder);
 
-        for (const message of messages) {
+        for (const message of messageList.messages) {
           const author = message.author;
           if (author) {
             // Extract email and name
@@ -259,10 +259,10 @@ async function deleteAllEmailsFromSender(emailAddress) {
 
       if (inboxFolder) {
         // Get all messages from inbox
-        const messages = await browser.messages.list(inboxFolder);
+        const messageList = await browser.messages.list(inboxFolder);
 
         // Filter messages from the specific sender
-        const messagesToDelete = messages.filter((message) => {
+        const messagesToDelete = messageList.messages.filter((message) => {
           if (!message.author) return false;
           const emailMatch = message.author.match(/<([^>]+)>/) || [
             null,
