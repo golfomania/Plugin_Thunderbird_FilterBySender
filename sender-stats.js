@@ -132,9 +132,9 @@ function startAutoRefresh() {
       console.log("Auto-refreshing sender stats...");
       await refreshStats();
     }
-  }, 30000); // 30 seconds
+  }, 5000); // 5 seconds
 
-  console.log("Auto-refresh started (30s interval)");
+  console.log("Auto-refresh started (5s interval)");
 }
 
 // Stop auto-refresh
@@ -341,7 +341,12 @@ function updateStatsText(text) {
   let displayText = text;
 
   if (lastUpdateTime) {
-    const timeString = lastUpdateTime.toLocaleTimeString();
+    const timeString = lastUpdateTime.toLocaleTimeString("en-GB", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
     displayText += ` • Last updated: ${timeString}`;
   }
 

@@ -93,7 +93,7 @@ chmod +x build.sh
 2. A new tab opens showing senders with the most emails
 3. Click any row to filter by that sender
 4. Use the delete button to remove all emails from a sender
-5. **Auto-refresh**: Statistics update automatically every 30 seconds while the tab is open
+5. **Auto-refresh**: Statistics update automatically every 5 seconds while the tab is open
 6. **Manual refresh**: Click the "Refresh" button to update immediately
 7. Load more entries with the "Load More" button
 
@@ -209,7 +209,7 @@ This extension:
 
 ## Version History
 
-- **v1.2.1** (Current): Added auto-refresh functionality for sender statistics (30s interval)
+- **v1.2.1** (Current): Added auto-refresh functionality for sender statistics (5s interval, 24h time format)
 - **v1.2.0**: Added sender statistics table with bulk delete functionality
 - **v1.1.3**: Extended compatibility to Thunderbird 140.x ESR
 - **v1.1.2**: Extended compatibility to Thunderbird 128.x
