@@ -52,10 +52,16 @@ async function loadSenderStats() {
         `Showing ${senderStats.length} of ${response.total} senders`
       );
 
-      // Show/hide load more button
+      // Show/hide load more button with correct count
       const loadMoreContainer = document.getElementById("load-more-container");
+      const loadMoreBtn = document.getElementById("load-more-btn");
+
       if (senderStats.length < response.total) {
         loadMoreContainer.classList.remove("hidden");
+        const remaining = response.total - senderStats.length;
+        const loadCount = Math.min(remaining, 50);
+        loadMoreBtn.textContent = `Load ${loadCount} more`;
+        loadMoreBtn.disabled = false;
       } else {
         loadMoreContainer.classList.add("hidden");
       }
@@ -87,6 +93,10 @@ async function refreshStats() {
 
 // Load more senders
 async function loadMoreSenders() {
+  const loadMoreBtn = document.getElementById("load-more-btn");
+  loadMoreBtn.disabled = true;
+  loadMoreBtn.textContent = "Loading...";
+
   await loadSenderStats();
 }
 
@@ -108,9 +118,7 @@ function renderTable() {
   tbody.innerHTML = senderStats
     .map(
       (sender, index) => `
-        <tr class="row-clickable" onclick="filterBySender('${escapeHtml(
-          sender.email
-        )}')">
+        <tr class="row-clickable" data-email="${escapeHtml(sender.email)}">
             <td>
                 <div class="sender-info">
                     <div class="sender-name">${escapeHtml(
@@ -135,6 +143,19 @@ function renderTable() {
     `
     )
     .join("");
+
+  // Add click event listeners to table rows
+  tbody.querySelectorAll(".row-clickable").forEach((row) => {
+    row.addEventListener("click", (e) => {
+      // Don't trigger if clicking on the delete button
+      if (e.target.closest(".action-btn")) return;
+
+      const email = row.dataset.email;
+      if (email) {
+        filterBySender(email);
+      }
+    });
+  });
 }
 
 // Filter by sender (reuse existing functionality)

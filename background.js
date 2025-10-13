@@ -196,10 +196,28 @@ async function getSenderStatistics(offset = 0, limit = 50) {
       );
 
       if (inboxFolder) {
-        // Get all messages from inbox
-        const messageList = await browser.messages.list(inboxFolder);
+        // Get all messages from inbox with pagination
+        let messageList = await browser.messages.list(inboxFolder);
+        let allMessages = [...messageList.messages];
 
-        for (const message of messageList.messages) {
+        // Handle pagination if there are more messages
+        let currentId = messageList.id;
+        while (currentId) {
+          try {
+            const nextList = await browser.messages.continueList(currentId);
+            allMessages = allMessages.concat(nextList.messages);
+            currentId = nextList.id;
+          } catch (error) {
+            // No more messages or error
+            break;
+          }
+        }
+
+        console.log(
+          `Processing ${allMessages.length} messages from account ${account.id}`
+        );
+
+        for (const message of allMessages) {
           const author = message.author;
           if (author) {
             // Extract email and name
@@ -258,11 +276,25 @@ async function deleteAllEmailsFromSender(emailAddress) {
       );
 
       if (inboxFolder) {
-        // Get all messages from inbox
-        const messageList = await browser.messages.list(inboxFolder);
+        // Get all messages from inbox with pagination
+        let messageList = await browser.messages.list(inboxFolder);
+        let allMessages = [...messageList.messages];
+
+        // Handle pagination if there are more messages
+        let currentId = messageList.id;
+        while (currentId) {
+          try {
+            const nextList = await browser.messages.continueList(currentId);
+            allMessages = allMessages.concat(nextList.messages);
+            currentId = nextList.id;
+          } catch (error) {
+            // No more messages or error
+            break;
+          }
+        }
 
         // Filter messages from the specific sender
-        const messagesToDelete = messageList.messages.filter((message) => {
+        const messagesToDelete = allMessages.filter((message) => {
           if (!message.author) return false;
           const emailMatch = message.author.match(/<([^>]+)>/) || [
             null,
