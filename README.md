@@ -28,6 +28,7 @@ Perfect for:
 - **🖱️ Context Menu**: Right-click any email to filter all messages from that sender
 - **📊 Sender Statistics**: Press `Ctrl+Shift+W` to see a table of senders with most emails
 - **🗑️ Bulk Delete**: Delete all emails from a sender directly from the statistics table
+- **📧 Email Preview**: Expand any sender to see email subjects and preview text for verification
 - **🚀 Quick Filter Integration**: Uses Thunderbird's built-in Quick Filter for instant results
 - **🎯 Smart Detection**: Works whether you're viewing an email or selecting from the list
 - **⚙️ Customizable**: Change the keyboard shortcuts to your preference
@@ -93,9 +94,10 @@ chmod +x build.sh
 2. A new tab opens showing senders with the most emails
 3. Click any row to filter by that sender
 4. Use the delete button to remove all emails from a sender
-5. **Auto-refresh**: Statistics update automatically every 5 seconds while the tab is open
-6. **Manual refresh**: Click the "Refresh" button to update immediately
-7. Load more entries with the "Load More" button
+5. Use the preview button to expand and see email subjects and preview text
+6. **Auto-refresh**: Statistics update automatically every 5 seconds while the tab is open
+7. **Manual refresh**: Click the "Refresh" button to update immediately
+8. Load more entries with the "Load More" button
 
 ### Customizing the Keyboard Shortcuts
 
@@ -209,7 +211,8 @@ This extension:
 
 ## Version History
 
-- **v1.2.1** (Current): Added auto-refresh functionality for sender statistics (5s interval, 24h time format)
+- **v1.3.0** (Current): Added email preview accordion to sender statistics table
+- **v1.2.1**: Added auto-refresh functionality for sender statistics (5s interval, 24h time format)
 - **v1.2.0**: Added sender statistics table with bulk delete functionality
 - **v1.1.3**: Extended compatibility to Thunderbird 140.x ESR
 - **v1.1.2**: Extended compatibility to Thunderbird 128.x

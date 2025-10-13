@@ -6,6 +6,7 @@ let isLoading = false;
 let pendingDelete = null;
 let autoRefreshInterval = null;
 let lastUpdateTime = null;
+let openAccordion = null; // Track which accordion is currently open
 
 // Initialize the page
 document.addEventListener("DOMContentLoaded", function () {
@@ -262,7 +263,7 @@ function renderTable() {
             <td>
                 <span class="count-badge">${sender.count}</span>
             </td>
-            <td>
+            <td class="actions-cell">
                 <button class="action-btn delete-btn" data-email="${escapeHtml(
                   sender.email
                 )}" data-name="${escapeHtml(
@@ -272,6 +273,20 @@ function renderTable() {
       }" title="Delete all emails from this sender">
                     🗑️ Delete All
                 </button>
+                <button class="accordion-btn" data-email="${escapeHtml(
+                  sender.email
+                )}" title="Show email previews">
+                    📧 Preview
+                </button>
+            </td>
+        </tr>
+        <tr class="accordion-row" data-email="${escapeHtml(
+          sender.email
+        )}" style="display: none;">
+            <td colspan="3">
+                <div class="accordion-content">
+                    <div class="loading">Loading email previews...</div>
+                </div>
             </td>
         </tr>
     `
@@ -284,8 +299,11 @@ function renderTable() {
       console.log("Row clicked, target:", e.target);
       console.log("Row dataset:", row.dataset);
 
-      // Don't trigger if clicking on the delete button
-      if (e.target.closest(".action-btn")) {
+      // Don't trigger if clicking on the delete button or accordion button
+      if (
+        e.target.closest(".action-btn") ||
+        e.target.closest(".accordion-btn")
+      ) {
         console.log("Click on action button, ignoring row click");
         return;
       }
@@ -309,6 +327,15 @@ function renderTable() {
       const name = btn.dataset.name;
       const count = parseInt(btn.dataset.count);
       deleteAllEmails(email, name, count);
+    });
+  });
+
+  // Add click event listeners to accordion buttons
+  tbody.querySelectorAll(".accordion-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const email = btn.dataset.email;
+      toggleAccordion(email);
     });
   });
 }
@@ -437,6 +464,87 @@ function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
+}
+
+// Toggle accordion for email previews
+async function toggleAccordion(email) {
+  console.log("toggleAccordion called with email:", email);
+
+  // Close currently open accordion if different
+  if (openAccordion && openAccordion !== email) {
+    closeAccordion(openAccordion);
+  }
+
+  // If clicking the same accordion, close it
+  if (openAccordion === email) {
+    closeAccordion(email);
+    return;
+  }
+
+  // Open the new accordion
+  openAccordion = email;
+  const accordionRow = document.querySelector(
+    `tr.accordion-row[data-email="${escapeHtml(email)}"]`
+  );
+  const accordionContent = accordionRow.querySelector(".accordion-content");
+
+  if (accordionRow && accordionContent) {
+    accordionRow.style.display = "table-row";
+
+    // Load email previews
+    try {
+      accordionContent.innerHTML =
+        '<div class="loading">Loading email previews...</div>';
+
+      const response = await browser.runtime.sendMessage({
+        action: "getEmailPreviews",
+        email: email,
+        limit: 10,
+      });
+
+      if (response.success) {
+        renderEmailPreviews(accordionContent, response.previews);
+      } else {
+        accordionContent.innerHTML =
+          '<div class="loading">Error loading previews</div>';
+      }
+    } catch (error) {
+      console.error("Error loading email previews:", error);
+      accordionContent.innerHTML =
+        '<div class="loading">Error loading previews</div>';
+    }
+  }
+}
+
+// Close accordion
+function closeAccordion(email) {
+  const accordionRow = document.querySelector(
+    `tr.accordion-row[data-email="${escapeHtml(email)}"]`
+  );
+  if (accordionRow) {
+    accordionRow.style.display = "none";
+  }
+  openAccordion = null;
+}
+
+// Render email previews
+function renderEmailPreviews(container, previews) {
+  if (previews.length === 0) {
+    container.innerHTML = '<div class="loading">No emails found</div>';
+    return;
+  }
+
+  container.innerHTML = previews
+    .map(
+      (preview) => `
+    <div class="email-preview">
+      <div class="email-subject">${escapeHtml(preview.subject)}</div>
+      <div class="email-preview-text">${escapeHtml(preview.previewText)}</div>
+      <div class="email-date">${new Date(preview.date).toLocaleString()}</div>
+    </div>
+  `
+    )
+    .join("");
 }
 
 // Handle messages from background script

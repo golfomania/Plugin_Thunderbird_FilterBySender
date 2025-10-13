@@ -237,6 +237,111 @@
         background-color: var(--in-content-table-row-background-hover);
       }
 
+      .accordion-btn {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 6px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: 8px;
+      }
+
+      .accordion-btn:hover {
+        background: #5a6268;
+      }
+
+      .accordion-btn:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
+
+      .accordion-content {
+        display: none;
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        padding: 12px 16px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .accordion-content {
+          background: #3a3a3c;
+          border-top-color: #48484a;
+        }
+      }
+
+      .email-preview {
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .email-preview {
+          border-bottom-color: #48484a;
+        }
+      }
+
+      .email-preview:last-child {
+        border-bottom: none;
+      }
+
+      .email-subject {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 4px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .email-subject {
+          color: #f2f2f7;
+        }
+      }
+
+      .email-preview-text {
+        color: #6c757d;
+        font-size: 12px;
+        font-style: italic;
+        max-height: 2.8em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .email-preview-text {
+          color: #8e8e93;
+        }
+      }
+
+      .email-date {
+        color: #6c757d;
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .email-date {
+          color: #8e8e93;
+        }
+      }
+
+      .actions-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
       .loading {
         text-align: center;
         padding: 40px;

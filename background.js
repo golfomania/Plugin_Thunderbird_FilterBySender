@@ -326,6 +326,16 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       return { success: false, error: error.message };
     }
   }
+
+  if (message.action === "getEmailPreviews") {
+    try {
+      const previews = await getEmailPreviews(message.email, message.limit);
+      return { success: true, previews };
+    } catch (error) {
+      console.error("Error getting email previews:", error);
+      return { success: false, error: error.message };
+    }
+  }
 });
 
 // Get sender statistics
@@ -467,6 +477,92 @@ async function deleteAllEmailsFromSender(emailAddress) {
     return totalDeleted;
   } catch (error) {
     console.error("Error deleting emails from sender:", error);
+    throw error;
+  }
+}
+
+// Get email previews for a specific sender
+async function getEmailPreviews(emailAddress, limit = 10) {
+  try {
+    const previews = [];
+
+    // Get all accounts
+    const accounts = await browser.accounts.list();
+
+    for (const account of accounts) {
+      // Get inbox folder for each account
+      const inboxFolder = account.folders.find(
+        (folder) => folder.type === "inbox"
+      );
+
+      if (inboxFolder) {
+        // Get all messages from inbox with pagination
+        let messageList = await browser.messages.list(inboxFolder.id);
+        let allMessages = [...messageList.messages];
+
+        // Handle pagination if there are more messages
+        let currentId = messageList.id;
+        while (currentId) {
+          try {
+            const nextList = await browser.messages.continueList(currentId);
+            allMessages = allMessages.concat(nextList.messages);
+            currentId = nextList.id;
+          } catch (error) {
+            // No more messages or error
+            break;
+          }
+        }
+
+        // Filter messages from the specific sender
+        const messagesFromSender = allMessages.filter((message) => {
+          if (!message.author) return false;
+          const emailMatch = message.author.match(/<([^>]+)>/) || [
+            null,
+            message.author,
+          ];
+          const authorEmail = emailMatch[1] || message.author;
+          return authorEmail === emailAddress;
+        });
+
+        // Get previews for each message
+        for (const message of messagesFromSender.slice(0, limit)) {
+          try {
+            // Get full message details
+            const fullMessage = await browser.messages.get(message.id);
+
+            previews.push({
+              id: message.id,
+              subject: fullMessage.subject || "No Subject",
+              previewText: fullMessage.previewText || "",
+              date: fullMessage.date,
+              read: fullMessage.read,
+            });
+          } catch (error) {
+            console.error("Error getting message details:", error);
+            // Fallback to basic info
+            previews.push({
+              id: message.id,
+              subject: message.subject || "No Subject",
+              previewText: "",
+              date: message.date,
+              read: message.read,
+            });
+          }
+        }
+
+        // Stop if we have enough previews
+        if (previews.length >= limit) {
+          break;
+        }
+      }
+    }
+
+    // Sort by date (newest first)
+    previews.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    return previews.slice(0, limit);
+  } catch (error) {
+    console.error("Error getting email previews:", error);
     throw error;
   }
 }
