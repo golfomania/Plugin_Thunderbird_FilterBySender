@@ -123,10 +123,11 @@ function startAutoRefresh() {
   }
 
   autoRefreshInterval = setInterval(async () => {
-    // Only refresh if not currently loading and no dialog is open
+    // Only refresh if not currently loading, no dialog is open, and no accordion is open
     if (
       !isLoading &&
-      document.getElementById("confirm-dialog").classList.contains("hidden")
+      document.getElementById("confirm-dialog").classList.contains("hidden") &&
+      !openAccordion
     ) {
       console.log("Auto-refreshing sender stats...");
       await refreshStats();
