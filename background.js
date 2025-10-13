@@ -136,21 +136,27 @@ async function filterBySender(author) {
 
 // Function to filter messages by email address
 async function filterBySenderFromEmail(emailAddress) {
+  console.log("filterBySenderFromEmail called with:", emailAddress);
   try {
     // Get the current mail tab
+    console.log("Getting current tabs...");
     const tabs = await browser.tabs.query({
       active: true,
       currentWindow: true,
     });
+    console.log("Current tabs:", tabs);
     const currentTab = tabs[0];
 
     // Check if it's a mail tab
+    console.log("Getting current mail tab...");
     const mailTab = await browser.mailTabs.getCurrent();
+    console.log("Current mail tab:", mailTab);
 
     if (mailTab) {
       // Set quick filter to filter by sender
       // Note: This is the primary method for filtering in Thunderbird WebExtensions
       try {
+        console.log("Setting quick filter for:", emailAddress);
         await browser.mailTabs.setQuickFilter({
           text: {
             text: emailAddress,
@@ -159,10 +165,13 @@ async function filterBySenderFromEmail(emailAddress) {
         });
         console.log(`Quick filter set for: ${emailAddress}`);
       } catch (quickFilterError) {
+        console.error("Quick filter error:", quickFilterError);
         console.log("Quick filter not supported, trying alternative method");
         // Alternative: Create a search folder or use saved search
         // This requires different permissions and is more complex
       }
+    } else {
+      console.log("No mail tab found");
     }
 
     console.log(`Filtering emails from: ${emailAddress}`);
@@ -172,6 +181,7 @@ async function filterBySenderFromEmail(emailAddress) {
     console.log(
       `Failed to filter. Please manually search for: ${emailAddress}`
     );
+    throw error; // Re-throw to be caught by caller
   }
 }
 
@@ -189,9 +199,12 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 
   if (message.action === "filterBySenderFromStats") {
+    console.log("Received filterBySenderFromStats message:", message);
     try {
       // For stats page, we already have just the email address
+      console.log("Calling filterBySenderFromEmail with:", message.email);
       await filterBySenderFromEmail(message.email);
+      console.log("Filter applied successfully");
       return { success: true };
     } catch (error) {
       console.error("Error filtering by sender from stats:", error);

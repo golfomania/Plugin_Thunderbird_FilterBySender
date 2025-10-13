@@ -167,12 +167,22 @@ function renderTable() {
   // Add click event listeners to table rows
   tbody.querySelectorAll(".row-clickable").forEach((row) => {
     row.addEventListener("click", (e) => {
+      console.log("Row clicked, target:", e.target);
+      console.log("Row dataset:", row.dataset);
+
       // Don't trigger if clicking on the delete button
-      if (e.target.closest(".action-btn")) return;
+      if (e.target.closest(".action-btn")) {
+        console.log("Click on action button, ignoring row click");
+        return;
+      }
 
       const email = row.dataset.email;
+      console.log("Email from row:", email);
       if (email) {
+        console.log("Calling filterBySender with:", email);
         filterBySender(email);
+      } else {
+        console.log("No email found in row dataset");
       }
     });
   });
@@ -191,17 +201,22 @@ function renderTable() {
 
 // Filter by sender (reuse existing functionality)
 async function filterBySender(email) {
+  console.log("filterBySender called with email:", email);
   try {
+    console.log("Sending message to background script...");
     const response = await browser.runtime.sendMessage({
       action: "filterBySenderFromStats",
       email: email,
     });
+
+    console.log("Response from background:", response);
 
     if (response.success) {
       // Don't close the stats tab - just switch to main Thunderbird window
       // The tab should remain open for easy navigation back
       console.log(`Filtered by ${email} - stats tab remains open`);
     } else {
+      console.error("Filter failed:", response.error);
       showError(
         "Failed to filter by sender: " + (response.error || "Unknown error")
       );
