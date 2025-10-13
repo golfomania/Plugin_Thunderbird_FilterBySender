@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 async function loadSenderStats() {
   if (isLoading) return;
 
+  console.log("loadSenderStats called, currentOffset:", currentOffset);
   isLoading = true;
   updateStatsText("Loading sender statistics...");
   disableRefreshButton(true);
@@ -40,6 +41,8 @@ async function loadSenderStats() {
       limit: 50,
     });
 
+    console.log("Response received:", response);
+
     if (response.success) {
       if (currentOffset === 0) {
         senderStats = response.senders;
@@ -49,7 +52,7 @@ async function loadSenderStats() {
 
       renderTable();
       updateStatsText(
-        `Showing ${senderStats.length} of ${response.total} senders`
+        `Showing ${senderStats.length} of ${response.total} senders (${response.totalEmails} emails analyzed)`
       );
 
       // Show/hide load more button with correct count
@@ -93,6 +96,7 @@ async function refreshStats() {
 
 // Load more senders
 async function loadMoreSenders() {
+  console.log("loadMoreSenders called");
   const loadMoreBtn = document.getElementById("load-more-btn");
   loadMoreBtn.disabled = true;
   loadMoreBtn.textContent = "Loading...";
@@ -167,8 +171,9 @@ async function filterBySender(email) {
     });
 
     if (response.success) {
-      // Close the stats tab and switch to main Thunderbird window
-      window.close();
+      // Don't close the stats tab - just switch to main Thunderbird window
+      // The tab should remain open for easy navigation back
+      console.log(`Filtered by ${email} - stats tab remains open`);
     } else {
       showError(
         "Failed to filter by sender: " + (response.error || "Unknown error")
@@ -182,12 +187,16 @@ async function filterBySender(email) {
 
 // Delete all emails from a sender
 function deleteAllEmails(email, name, count) {
+  console.log("deleteAllEmails called with:", email, name, count);
   pendingDelete = { email, name, count };
 
   const confirmText = document.getElementById("confirm-text");
   confirmText.textContent = `Are you sure you want to delete all ${count} emails from "${name}" (${email})? This action cannot be undone.`;
 
-  document.getElementById("confirm-dialog").classList.remove("hidden");
+  const dialog = document.getElementById("confirm-dialog");
+  console.log("Dialog element:", dialog);
+  dialog.classList.remove("hidden");
+  console.log("Dialog should now be visible");
 }
 
 // Cancel delete operation

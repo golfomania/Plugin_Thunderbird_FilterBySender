@@ -109,7 +109,18 @@ async function filterBySender(author) {
     // Extract email address from author string (format: "Name <email@domain.com>")
     const emailMatch = author.match(/<([^>]+)>/) || [null, author];
     const emailAddress = emailMatch[1] || author;
+    await filterBySenderFromEmail(emailAddress);
+  } catch (error) {
+    console.error("Error in filterBySender:", error);
+    console.log(
+      `Failed to filter. Please manually search for: ${emailAddress}`
+    );
+  }
+}
 
+// Function to filter messages by email address
+async function filterBySenderFromEmail(emailAddress) {
+  try {
     // Get the current mail tab
     const tabs = await browser.tabs.query({
       active: true,
@@ -140,7 +151,7 @@ async function filterBySender(author) {
 
     console.log(`Filtering emails from: ${emailAddress}`);
   } catch (error) {
-    console.error("Error in filterBySender:", error);
+    console.error("Error in filterBySenderFromEmail:", error);
     // Show notification to user about the error
     console.log(
       `Failed to filter. Please manually search for: ${emailAddress}`
@@ -163,7 +174,8 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
   if (message.action === "filterBySenderFromStats") {
     try {
-      await filterBySender(message.email);
+      // For stats page, we already have just the email address
+      await filterBySenderFromEmail(message.email);
       return { success: true };
     } catch (error) {
       console.error("Error filtering by sender from stats:", error);
@@ -245,6 +257,9 @@ async function getSenderStatistics(offset = 0, limit = 50) {
       (a, b) => b.count - a.count
     );
 
+    // Calculate total emails analyzed
+    const totalEmails = senders.reduce((sum, sender) => sum + sender.count, 0);
+
     // Apply pagination
     const total = senders.length;
     const paginatedSenders = senders.slice(offset, offset + limit);
@@ -252,6 +267,7 @@ async function getSenderStatistics(offset = 0, limit = 50) {
     return {
       senders: paginatedSenders,
       total: total,
+      totalEmails: totalEmails,
       offset: offset,
       limit: limit,
     };
