@@ -165,12 +165,20 @@ async function filterBySenderFromEmail(emailAddress) {
       console.log("All tabs:", allTabs);
 
       // Look for Thunderbird main window (usually the first non-extension tab)
+      console.log("Looking for main Thunderbird tab...");
+      console.log(
+        "Tab URLs:",
+        allTabs.map((tab) => ({ id: tab.id, url: tab.url, title: tab.title }))
+      );
+
       const mainTab = allTabs.find(
         (tab) =>
           tab.url &&
           !tab.url.includes("moz-extension") &&
           !tab.url.includes("about:") &&
-          !tab.url.includes("chrome://")
+          !tab.url.includes("chrome://") &&
+          tab.url !== "undefined" &&
+          tab.url !== ""
       );
 
       if (mainTab) {
@@ -200,7 +208,42 @@ async function filterBySenderFromEmail(emailAddress) {
           }
         }
       } else {
-        console.log("No main Thunderbird tab found");
+        console.log("No main Thunderbird tab found, trying to create one...");
+        try {
+          // Try to open Thunderbird's main window
+          const newTab = await browser.tabs.create({
+            url: "about:3pane",
+            active: true,
+          });
+          console.log("Created new Thunderbird tab:", newTab);
+
+          // Wait for the tab to load
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          // Try to get the current mail tab
+          const newMailTab = await browser.mailTabs.getCurrent();
+          console.log("Current mail tab after creating new tab:", newMailTab);
+
+          if (newMailTab) {
+            try {
+              console.log("Setting quick filter for:", emailAddress);
+              await browser.mailTabs.setQuickFilter({
+                text: {
+                  text: emailAddress,
+                  author: true, // Filter by author/sender
+                },
+              });
+              console.log(`Quick filter set for: ${emailAddress}`);
+            } catch (quickFilterError) {
+              console.error(
+                "Quick filter error after creating tab:",
+                quickFilterError
+              );
+            }
+          }
+        } catch (createError) {
+          console.error("Error creating Thunderbird tab:", createError);
+        }
       }
     }
 
