@@ -4,10 +4,13 @@ let senderStats = [];
 let currentOffset = 0;
 let isLoading = false;
 let pendingDelete = null;
+let autoRefreshInterval = null;
+let lastUpdateTime = null;
 
 // Initialize the page
 document.addEventListener("DOMContentLoaded", function () {
   loadSenderStats();
+  startAutoRefresh();
 
   // Add event listeners for buttons
   document
@@ -36,6 +39,19 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelDelete();
       }
     }
+  });
+
+  // Stop auto-refresh when page is hidden/unloaded
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      stopAutoRefresh();
+    } else {
+      startAutoRefresh();
+    }
+  });
+
+  window.addEventListener("beforeunload", function () {
+    stopAutoRefresh();
   });
 });
 
@@ -101,10 +117,40 @@ async function loadSenderStats() {
   }
 }
 
+// Start auto-refresh
+function startAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+  }
+
+  autoRefreshInterval = setInterval(async () => {
+    // Only refresh if not currently loading and no dialog is open
+    if (
+      !isLoading &&
+      document.getElementById("confirm-dialog").classList.contains("hidden")
+    ) {
+      console.log("Auto-refreshing sender stats...");
+      await refreshStats();
+    }
+  }, 30000); // 30 seconds
+
+  console.log("Auto-refresh started (30s interval)");
+}
+
+// Stop auto-refresh
+function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    console.log("Auto-refresh stopped");
+  }
+}
+
 // Refresh statistics
 async function refreshStats() {
   currentOffset = 0;
   senderStats = [];
+  lastUpdateTime = new Date();
   await loadSenderStats();
 }
 
@@ -291,7 +337,15 @@ async function confirmDelete() {
 
 // Update stats text
 function updateStatsText(text) {
-  document.getElementById("stats-text").textContent = text;
+  const statsTextElement = document.getElementById("stats-text");
+  let displayText = text;
+
+  if (lastUpdateTime) {
+    const timeString = lastUpdateTime.toLocaleTimeString();
+    displayText += ` • Last updated: ${timeString}`;
+  }
+
+  statsTextElement.textContent = displayText;
 }
 
 // Disable/enable refresh button
