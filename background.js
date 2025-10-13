@@ -191,12 +191,13 @@ async function getSenderStatistics(offset = 0, limit = 50) {
 
     for (const account of accounts) {
       // Get inbox folder for each account
-      const folders = await browser.accountsFolders.list(account.id);
-      const inboxFolder = folders.find((folder) => folder.type === "inbox");
+      const inboxFolder = account.folders.find(
+        (folder) => folder.type === "inbox"
+      );
 
       if (inboxFolder) {
         // Get all messages from inbox
-        const messages = await browser.messages.list(inboxFolder.id);
+        const messages = await browser.messages.list(inboxFolder);
 
         for (const message of messages) {
           const author = message.author;
@@ -252,12 +253,13 @@ async function deleteAllEmailsFromSender(emailAddress) {
 
     for (const account of accounts) {
       // Get inbox folder for each account
-      const folders = await browser.accountsFolders.list(account.id);
-      const inboxFolder = folders.find((folder) => folder.type === "inbox");
+      const inboxFolder = account.folders.find(
+        (folder) => folder.type === "inbox"
+      );
 
       if (inboxFolder) {
         // Get all messages from inbox
-        const messages = await browser.messages.list(inboxFolder.id);
+        const messages = await browser.messages.list(inboxFolder);
 
         // Filter messages from the specific sender
         const messagesToDelete = messages.filter((message) => {
