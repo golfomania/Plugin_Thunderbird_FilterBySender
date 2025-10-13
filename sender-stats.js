@@ -13,9 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   startAutoRefresh();
 
   // Add event listeners for buttons
-  document
-    .getElementById("refresh-btn")
-    .addEventListener("click", refreshStats);
+  document.getElementById("refresh-btn").addEventListener("click", resetStats);
   document
     .getElementById("load-more-btn")
     .addEventListener("click", loadMoreSenders);
@@ -146,8 +144,78 @@ function stopAutoRefresh() {
   }
 }
 
-// Refresh statistics
+// Refresh statistics (preserves current view)
 async function refreshStats() {
+  lastUpdateTime = new Date();
+
+  // If we have loaded data, refresh all of it
+  if (senderStats.length > 0) {
+    await refreshAllLoadedData();
+  } else {
+    // If no data loaded yet, do normal load
+    await loadSenderStats();
+  }
+}
+
+// Refresh all currently loaded data
+async function refreshAllLoadedData() {
+  if (isLoading) return;
+
+  isLoading = true;
+  updateStatsText("Refreshing sender statistics...");
+  disableRefreshButton(true);
+
+  try {
+    // Get all data up to current offset
+    const response = await browser.runtime.sendMessage({
+      action: "getSenderStats",
+      offset: 0,
+      limit: senderStats.length, // Get all currently loaded data
+    });
+
+    console.log("Refresh response received:", response);
+
+    if (response.success) {
+      // Replace all current data with fresh data
+      senderStats = response.senders;
+
+      renderTable();
+      updateStatsText(
+        `Showing ${senderStats.length} of ${response.total} senders (${response.totalEmails} emails analyzed)`
+      );
+
+      // Show/hide load more button with correct count
+      const loadMoreContainer = document.getElementById("load-more-container");
+      const loadMoreBtn = document.getElementById("load-more-btn");
+
+      if (senderStats.length < response.total) {
+        loadMoreContainer.classList.remove("hidden");
+        const remaining = response.total - senderStats.length;
+        const loadCount = Math.min(remaining, 50);
+        loadMoreBtn.textContent = `Load ${loadCount} more`;
+        loadMoreBtn.disabled = false;
+      } else {
+        loadMoreContainer.classList.add("hidden");
+      }
+    } else {
+      updateStatsText("Error refreshing sender statistics");
+      showError(
+        "Failed to refresh sender statistics: " +
+          (response.error || "Unknown error")
+      );
+    }
+  } catch (error) {
+    console.error("Error refreshing sender stats:", error);
+    updateStatsText("Error refreshing sender statistics");
+    showError("Failed to refresh sender statistics: " + error.message);
+  } finally {
+    isLoading = false;
+    disableRefreshButton(false);
+  }
+}
+
+// Reset statistics (clears view)
+async function resetStats() {
   currentOffset = 0;
   senderStats = [];
   lastUpdateTime = new Date();
@@ -316,7 +384,7 @@ async function confirmDelete() {
 
     if (response.success) {
       // Refresh the statistics
-      await refreshStats();
+      await resetStats();
       updateStatsText(`Deleted ${response.deletedCount} emails from ${name}`);
     } else {
       showError(
