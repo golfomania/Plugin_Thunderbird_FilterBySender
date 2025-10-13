@@ -457,6 +457,31 @@
         background: #c82333;
       }
 
+      .dialog-checkbox {
+        margin: 16px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .dialog-checkbox input[type="checkbox"] {
+        margin: 0;
+        cursor: pointer;
+      }
+
+      .dialog-checkbox label {
+        margin: 0;
+        cursor: pointer;
+        font-size: 14px;
+        color: #495057;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .dialog-checkbox label {
+          color: #f2f2f7;
+        }
+      }
+
       .hidden {
         display: none;
       }
@@ -509,6 +534,12 @@
           Are you sure you want to delete all emails from this sender? This
           action cannot be undone.
         </p>
+        <div class="dialog-checkbox">
+          <input type="checkbox" id="dont-show-again-checkbox" />
+          <label for="dont-show-again-checkbox"
+            >Don't show again in this session</label
+          >
+        </div>
         <div class="dialog-buttons">
           <button class="dialog-btn dialog-btn-cancel" id="cancel-delete-btn">
             Cancel

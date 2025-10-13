@@ -211,7 +211,8 @@ This extension:
 
 ## Version History
 
-- **v1.3.0** (Current): Added email preview accordion to sender statistics table
+- **v1.3.1** (Current): Added "Don't show again in this session" checkbox to delete confirmation dialog
+- **v1.3.0**: Added email preview accordion to sender statistics table
 - **v1.2.1**: Added auto-refresh functionality for sender statistics (5s interval, 24h time format)
 - **v1.2.0**: Added sender statistics table with bulk delete functionality
 - **v1.1.3**: Extended compatibility to Thunderbird 140.x ESR

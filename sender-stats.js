@@ -7,6 +7,7 @@ let pendingDelete = null;
 let autoRefreshInterval = null;
 let lastUpdateTime = null;
 let openAccordion = null; // Track which accordion is currently open
+let skipConfirmation = false; // Track if confirmation should be skipped for this session
 
 // Initialize the page
 document.addEventListener("DOMContentLoaded", function () {
@@ -436,8 +437,19 @@ function deleteAllEmails(email, name, count) {
   console.log("deleteAllEmails called with:", email, name, count);
   pendingDelete = { email, name, count };
 
+  // Check if confirmation should be skipped
+  if (skipConfirmation) {
+    console.log("Skipping confirmation dialog");
+    confirmDelete();
+    return;
+  }
+
   const confirmText = document.getElementById("confirm-text");
   confirmText.textContent = `Are you sure you want to delete all ${count} emails from "${name}" (${email})? This action cannot be undone.`;
+
+  // Reset checkbox to unchecked
+  const checkbox = document.getElementById("dont-show-again-checkbox");
+  checkbox.checked = false;
 
   const dialog = document.getElementById("confirm-dialog");
   console.log("Dialog element:", dialog);
@@ -456,6 +468,13 @@ async function confirmDelete() {
   if (!pendingDelete) return;
 
   const { email, name } = pendingDelete;
+
+  // Check if "don't show again" is checked
+  const checkbox = document.getElementById("dont-show-again-checkbox");
+  if (checkbox.checked) {
+    skipConfirmation = true;
+    console.log("Confirmation disabled for this session");
+  }
 
   // Hide dialog
   document.getElementById("confirm-dialog").classList.add("hidden");

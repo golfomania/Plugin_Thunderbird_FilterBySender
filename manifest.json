@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Filter by sender",
-  "version": "1.3.0",
+  "version": "1.2.2",
   "description": "Quickly find emails from the same sender with a keyboard shortcut or right-click",
   "author": "Martin Loeffler",
   "homepage_url": "https://github.com/golfomania/Plugin_Thunderbird_FilterBySender",
