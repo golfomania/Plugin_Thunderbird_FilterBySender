@@ -138,46 +138,59 @@ async function filterBySender(author) {
 async function filterBySenderFromEmail(emailAddress) {
   console.log("filterBySenderFromEmail called with:", emailAddress);
   try {
-    // Get the current mail tab
-    console.log("Getting current tabs...");
-    const tabs = await browser.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-    console.log("Current tabs:", tabs);
-    const currentTab = tabs[0];
+    // Get all tabs to find mail tabs
+    console.log("Getting all tabs...");
+    const allTabs = await browser.tabs.query({});
+    console.log("All tabs:", allTabs);
 
-    // Check if it's a mail tab
-    console.log("Getting current mail tab...");
-    const mailTab = await browser.mailTabs.getCurrent();
-    console.log("Current mail tab:", mailTab);
+    // Find mail tabs (tabs with mail: URLs)
+    const mailTabs = allTabs.filter(
+      (tab) =>
+        tab.url && (tab.url.startsWith("mail:") || tab.url.includes("mailbox"))
+    );
+    console.log("Mail tabs found:", mailTabs);
 
-    if (mailTab) {
-      // Set quick filter to filter by sender
-      // Note: This is the primary method for filtering in Thunderbird WebExtensions
-      try {
-        console.log("Setting quick filter for:", emailAddress);
-        await browser.mailTabs.setQuickFilter({
-          text: {
-            text: emailAddress,
-            author: true, // Filter by author/sender
-          },
-        });
-        console.log(`Quick filter set for: ${emailAddress}`);
-      } catch (quickFilterError) {
-        console.error("Quick filter error:", quickFilterError);
-        console.log("Quick filter not supported, trying alternative method");
-        // Alternative: Create a search folder or use saved search
-        // This requires different permissions and is more complex
+    if (mailTabs.length > 0) {
+      // Use the first mail tab (usually the main inbox)
+      const mailTab = mailTabs[0];
+      console.log("Using mail tab:", mailTab);
+
+      // Switch to the mail tab first
+      await browser.tabs.update(mailTab.id, { active: true });
+      console.log("Switched to mail tab");
+
+      // Wait a moment for the tab to become active
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Now try to get the current mail tab
+      const currentMailTab = await browser.mailTabs.getCurrent();
+      console.log("Current mail tab after switch:", currentMailTab);
+
+      if (currentMailTab) {
+        // Set quick filter to filter by sender
+        try {
+          console.log("Setting quick filter for:", emailAddress);
+          await browser.mailTabs.setQuickFilter({
+            text: {
+              text: emailAddress,
+              author: true, // Filter by author/sender
+            },
+          });
+          console.log(`Quick filter set for: ${emailAddress}`);
+        } catch (quickFilterError) {
+          console.error("Quick filter error:", quickFilterError);
+          console.log("Quick filter not supported, trying alternative method");
+        }
+      } else {
+        console.log("Still no mail tab found after switch");
       }
     } else {
-      console.log("No mail tab found");
+      console.log("No mail tabs found");
     }
 
     console.log(`Filtering emails from: ${emailAddress}`);
   } catch (error) {
     console.error("Error in filterBySenderFromEmail:", error);
-    // Show notification to user about the error
     console.log(
       `Failed to filter. Please manually search for: ${emailAddress}`
     );
