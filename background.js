@@ -138,54 +138,70 @@ async function filterBySender(author) {
 async function filterBySenderFromEmail(emailAddress) {
   console.log("filterBySenderFromEmail called with:", emailAddress);
   try {
-    // Get all tabs to find mail tabs
-    console.log("Getting all tabs...");
-    const allTabs = await browser.tabs.query({});
-    console.log("All tabs:", allTabs);
+    // Get the current mail tab
+    console.log("Getting current mail tab...");
+    const mailTab = await browser.mailTabs.getCurrent();
+    console.log("Current mail tab:", mailTab);
 
-    // Find mail tabs (tabs with mail: URLs)
-    const mailTabs = allTabs.filter(
-      (tab) =>
-        tab.url && (tab.url.startsWith("mail:") || tab.url.includes("mailbox"))
-    );
-    console.log("Mail tabs found:", mailTabs);
-
-    if (mailTabs.length > 0) {
-      // Use the first mail tab (usually the main inbox)
-      const mailTab = mailTabs[0];
-      console.log("Using mail tab:", mailTab);
-
-      // Switch to the mail tab first
-      await browser.tabs.update(mailTab.id, { active: true });
-      console.log("Switched to mail tab");
-
-      // Wait a moment for the tab to become active
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      // Now try to get the current mail tab
-      const currentMailTab = await browser.mailTabs.getCurrent();
-      console.log("Current mail tab after switch:", currentMailTab);
-
-      if (currentMailTab) {
-        // Set quick filter to filter by sender
-        try {
-          console.log("Setting quick filter for:", emailAddress);
-          await browser.mailTabs.setQuickFilter({
-            text: {
-              text: emailAddress,
-              author: true, // Filter by author/sender
-            },
-          });
-          console.log(`Quick filter set for: ${emailAddress}`);
-        } catch (quickFilterError) {
-          console.error("Quick filter error:", quickFilterError);
-          console.log("Quick filter not supported, trying alternative method");
-        }
-      } else {
-        console.log("Still no mail tab found after switch");
+    if (mailTab) {
+      // Set quick filter to filter by sender
+      try {
+        console.log("Setting quick filter for:", emailAddress);
+        await browser.mailTabs.setQuickFilter({
+          text: {
+            text: emailAddress,
+            author: true, // Filter by author/sender
+          },
+        });
+        console.log(`Quick filter set for: ${emailAddress}`);
+      } catch (quickFilterError) {
+        console.error("Quick filter error:", quickFilterError);
+        console.log("Quick filter not supported, trying alternative method");
       }
     } else {
-      console.log("No mail tabs found");
+      console.log("No mail tab found - user needs to be in a mail tab");
+      // Try to find and switch to a mail tab
+      const allTabs = await browser.tabs.query({});
+      console.log("All tabs:", allTabs);
+
+      // Look for Thunderbird main window (usually the first non-extension tab)
+      const mainTab = allTabs.find(
+        (tab) =>
+          tab.url &&
+          !tab.url.includes("moz-extension") &&
+          !tab.url.includes("about:") &&
+          !tab.url.includes("chrome://")
+      );
+
+      if (mainTab) {
+        console.log("Found main Thunderbird tab:", mainTab);
+        await browser.tabs.update(mainTab.id, { active: true });
+        console.log("Switched to main Thunderbird tab");
+
+        // Wait a moment for the tab to become active
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Try again to get the current mail tab
+        const newMailTab = await browser.mailTabs.getCurrent();
+        console.log("Current mail tab after switch:", newMailTab);
+
+        if (newMailTab) {
+          try {
+            console.log("Setting quick filter for:", emailAddress);
+            await browser.mailTabs.setQuickFilter({
+              text: {
+                text: emailAddress,
+                author: true, // Filter by author/sender
+              },
+            });
+            console.log(`Quick filter set for: ${emailAddress}`);
+          } catch (quickFilterError) {
+            console.error("Quick filter error after switch:", quickFilterError);
+          }
+        }
+      } else {
+        console.log("No main Thunderbird tab found");
+      }
     }
 
     console.log(`Filtering emails from: ${emailAddress}`);
