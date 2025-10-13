@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Filter by sender",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "Quickly find emails from the same sender with a keyboard shortcut or right-click",
   "author": "Martin Loeffler",
   "homepage_url": "https://github.com/golfomania/Plugin_Thunderbird_FilterBySender",
@@ -15,7 +15,8 @@
   "permissions": [
     "messagesRead",
     "tabs",
-    "menus"
+    "menus",
+    "messagesDelete"
   ],
   "background": {
     "scripts": [
@@ -30,6 +31,13 @@
         "mac": "MacCtrl+Shift+Q"
       },
       "description": "Find all emails from the current message's sender"
+    },
+    "sender-stats": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+W",
+        "mac": "MacCtrl+Shift+W"
+      },
+      "description": "Show sender statistics table"
     }
   },
   "icons": {

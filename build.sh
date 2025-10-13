@@ -25,6 +25,8 @@ echo "Creating XPI package..."
 zip -r filter-by-sender.xpi \
     manifest.json \
     background.js \
+    sender-stats.html \
+    sender-stats.js \
     icon-*.png \
     -x "*.py" "*.md" "*.sh" ".git/*" "*.xpi" ".gitignore" \
     > /dev/null 2>&1

@@ -26,9 +26,11 @@ Perfect for:
 
 - **⌨️ Keyboard Shortcut**: Press `Ctrl+Shift+Q` (or `Cmd+Shift+Q` on Mac) to instantly filter by sender
 - **🖱️ Context Menu**: Right-click any email to filter all messages from that sender
+- **📊 Sender Statistics**: Press `Ctrl+Shift+W` to see a table of senders with most emails
+- **🗑️ Bulk Delete**: Delete all emails from a sender directly from the statistics table
 - **🚀 Quick Filter Integration**: Uses Thunderbird's built-in Quick Filter for instant results
 - **🎯 Smart Detection**: Works whether you're viewing an email or selecting from the list
-- **⚙️ Customizable**: Change the keyboard shortcut to your preference
+- **⚙️ Customizable**: Change the keyboard shortcuts to your preference
 - **🔒 Privacy-Focused**: No data collection, no external connections, minimal permissions
 
 ## Requirements
@@ -81,10 +83,19 @@ chmod +x build.sh
 ### Method 2: Right-Click Context Menu
 
 1. Right-click on any email in your message list
-2. Select **"Find all emails from this sender"**
-3. All emails from that sender are displayed
+2. Select **"Find all emails from this sender"** to filter by that sender
+3. Or select **"Open sender statistics table"** to see all senders
+4. All emails from that sender are displayed (when filtering)
 
-### Customizing the Keyboard Shortcut
+### Method 3: Sender Statistics Table
+
+1. Press **`Ctrl+Shift+W`** (Linux/Windows) or **`Cmd+Shift+W`** (Mac)
+2. A new tab opens showing senders with the most emails
+3. Click any row to filter by that sender
+4. Use the delete button to remove all emails from a sender
+5. Load more entries with the "Load More" button
+
+### Customizing the Keyboard Shortcuts
 
 1. Go to **Add-ons and Themes** → **⚙ Gear Menu** → **Manage Extension Shortcuts**
 2. Find "Filter by sender"
@@ -98,6 +109,8 @@ chmod +x build.sh
 Plugin_Thunderbird_FilterBySender/
 ├── manifest.json          # Extension manifest (Manifest V2)
 ├── background.js          # Background script for filtering logic
+├── sender-stats.html      # Sender statistics page
+├── sender-stats.js        # Statistics page JavaScript
 ├── generate_icons.py      # Icon generation script
 ├── build.sh              # Build script for creating XPI
 ├── icon-*.png            # Extension icons (generated)
@@ -123,7 +136,7 @@ Plugin_Thunderbird_FilterBySender/
 ./build.sh
 
 # Or manually create the XPI
-zip -r filter-by-sender.xpi manifest.json background.js icon-*.png
+zip -r filter-by-sender.xpi manifest.json background.js sender-stats.html sender-stats.js icon-*.png
 ```
 
 ### Permissions
@@ -133,6 +146,7 @@ This extension uses minimal permissions following the principle of least privile
 - `messagesRead`: Read message metadata to get sender information
 - `tabs`: Access the current tab to identify selected messages
 - `menus`: Create the right-click context menu option
+- `messagesDelete`: Delete emails from the sender statistics table
 
 No data is collected, stored, or transmitted outside of Thunderbird.
 
@@ -192,7 +206,8 @@ This extension:
 
 ## Version History
 
-- **v1.1.3** (Current): Extended compatibility to Thunderbird 140.x ESR
+- **v1.2.0** (Current): Added sender statistics table with bulk delete functionality
+- **v1.1.3**: Extended compatibility to Thunderbird 140.x ESR
 - **v1.1.2**: Extended compatibility to Thunderbird 128.x
 - **v1.1.1**: Fixed AMO validation error (strict_max_version format)
 - **v1.1.0**: Added keyboard shortcut support (Ctrl+Shift+Q)
