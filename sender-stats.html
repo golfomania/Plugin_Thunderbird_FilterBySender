@@ -369,9 +369,7 @@
         <div class="stats-info">
           <span id="stats-text">Loading sender statistics...</span>
         </div>
-        <button id="refresh-btn" class="refresh-btn" onclick="refreshStats()">
-          🔄 Refresh
-        </button>
+        <button id="refresh-btn" class="refresh-btn">🔄 Refresh</button>
       </div>
 
       <div class="table-container">
@@ -392,11 +390,7 @@
           </tbody>
         </table>
         <div id="load-more-container" class="load-more hidden">
-          <button
-            id="load-more-btn"
-            class="load-more-btn"
-            onclick="loadMoreSenders()"
-          >
+          <button id="load-more-btn" class="load-more-btn">
             Load More (50 more)
           </button>
         </div>
@@ -412,13 +406,10 @@
           action cannot be undone.
         </p>
         <div class="dialog-buttons">
-          <button class="dialog-btn dialog-btn-cancel" onclick="cancelDelete()">
+          <button class="dialog-btn dialog-btn-cancel" id="cancel-delete-btn">
             Cancel
           </button>
-          <button
-            class="dialog-btn dialog-btn-confirm"
-            onclick="confirmDelete()"
-          >
+          <button class="dialog-btn dialog-btn-confirm" id="confirm-delete-btn">
             Delete All
           </button>
         </div>

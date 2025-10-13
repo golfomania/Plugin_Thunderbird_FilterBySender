@@ -1,16 +1,32 @@
 // Background script for Filter by sender extension
 
 // Create context menu when extension loads
-browser.menus.create({
-  id: "filter-by-sender",
-  title: "Find all emails from this sender",
-  contexts: ["message_list"],
+browser.runtime.onStartup.addListener(() => {
+  browser.menus.create({
+    id: "filter-by-sender",
+    title: "Find all emails from this sender",
+    contexts: ["message_list"],
+  });
+
+  browser.menus.create({
+    id: "open-sender-stats",
+    title: "Open sender statistics table",
+    contexts: ["message_list"],
+  });
 });
 
-browser.menus.create({
-  id: "open-sender-stats",
-  title: "Open sender statistics table",
-  contexts: ["message_list"],
+browser.runtime.onInstalled.addListener(() => {
+  browser.menus.create({
+    id: "filter-by-sender",
+    title: "Find all emails from this sender",
+    contexts: ["message_list"],
+  });
+
+  browser.menus.create({
+    id: "open-sender-stats",
+    title: "Open sender statistics table",
+    contexts: ["message_list"],
+  });
 });
 
 // Add menu click listener
@@ -209,7 +225,7 @@ async function getSenderStatistics(offset = 0, limit = 50) {
 
       if (inboxFolder) {
         // Get all messages from inbox with pagination
-        let messageList = await browser.messages.list(inboxFolder);
+        let messageList = await browser.messages.list(inboxFolder.id);
         let allMessages = [...messageList.messages];
 
         // Handle pagination if there are more messages
@@ -293,7 +309,7 @@ async function deleteAllEmailsFromSender(emailAddress) {
 
       if (inboxFolder) {
         // Get all messages from inbox with pagination
-        let messageList = await browser.messages.list(inboxFolder);
+        let messageList = await browser.messages.list(inboxFolder.id);
         let allMessages = [...messageList.messages];
 
         // Handle pagination if there are more messages

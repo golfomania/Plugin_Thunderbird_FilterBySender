@@ -9,6 +9,20 @@ let pendingDelete = null;
 document.addEventListener("DOMContentLoaded", function () {
   loadSenderStats();
 
+  // Add event listeners for buttons
+  document
+    .getElementById("refresh-btn")
+    .addEventListener("click", refreshStats);
+  document
+    .getElementById("load-more-btn")
+    .addEventListener("click", loadMoreSenders);
+  document
+    .getElementById("cancel-delete-btn")
+    .addEventListener("click", cancelDelete);
+  document
+    .getElementById("confirm-delete-btn")
+    .addEventListener("click", confirmDelete);
+
   // Add keyboard shortcut for confirmation dialog
   document.addEventListener("keydown", function (e) {
     if (
@@ -135,11 +149,13 @@ function renderTable() {
                 <span class="count-badge">${sender.count}</span>
             </td>
             <td>
-                <button class="action-btn" onclick="event.stopPropagation(); deleteAllEmails('${escapeHtml(
+                <button class="action-btn delete-btn" data-email="${escapeHtml(
                   sender.email
-                )}', '${escapeHtml(sender.name || "Unknown")}', ${
+                )}" data-name="${escapeHtml(
+        sender.name || "Unknown"
+      )}" data-count="${
         sender.count
-      })" title="Delete all emails from this sender">
+      }" title="Delete all emails from this sender">
                     🗑️ Delete All
                 </button>
             </td>
@@ -158,6 +174,17 @@ function renderTable() {
       if (email) {
         filterBySender(email);
       }
+    });
+  });
+
+  // Add click event listeners to delete buttons
+  tbody.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const email = btn.dataset.email;
+      const name = btn.dataset.name;
+      const count = parseInt(btn.dataset.count);
+      deleteAllEmails(email, name, count);
     });
   });
 }
